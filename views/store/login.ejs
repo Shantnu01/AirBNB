@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title %></title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .auth-container {
+      background: #fff;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      width: 360px;
+      border: 1px solid #ebebeb;
+      box-sizing: border-box;
+    }
+    h2 {
+      margin: 0 0 8px 0;
+      font-weight: 800;
+      color: #222;
+      text-align: center;
+    }
+    p {
+      color: #717171;
+      text-align: center;
+      margin: 0 0 24px 0;
+      font-size: 0.9rem;
+    }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+      color: #222;
+      font-size: 0.9rem;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-sizing: border-box;
+      font-size: 0.95rem;
+    }
+    input:focus {
+      border-color: #ff5a5f;
+      outline: none;
+    }
+    .btn-submit {
+      width: 100%;
+      padding: 12px;
+      background: #ff5a5f;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+    .btn-submit:hover {
+      background: #e0484d;
+    }
+    .switch-link {
+      display: block;
+      text-align: center;
+      margin-top: 16px;
+      font-size: 0.85rem;
+      color: #717171;
+    }
+    .switch-link a {
+      color: #ff5a5f;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .switch-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-container">
+    <h2>Login to Airbnb</h2>
+    <p>Welcome back! Please enter your details.</p>
+    
+    <form action="/login" method="POST">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" placeholder="Enter your username" required>
+
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" placeholder="Enter your password" required>
+
+      <button type="submit" class="btn-submit">Log In</button>
+    </form>
+
+    <div class="switch-link">
+      Don't have an account? <a href="/signup">Sign up</a>
+    </div>
+  </div>
+</body>
+</html>

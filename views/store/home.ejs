@@ -1,0 +1,244 @@
+<%- include('../partials/nav') %>
+
+<div class="store-container">
+  <div class="store-header">
+    <h2>Welcome to Airbnb</h2>
+    <p>Discover your next adventure. Browse homes or list your own property.</p>
+  </div>
+
+  <div class="homes">
+    <% house.forEach(homes => { %>
+      <div class="home-card">
+        <!-- Heart form -->
+        <form action="/fav" method="POST" class="fav-form">
+          <input type="hidden" name="id" value="<%= homes.id %>">
+          <button type="submit" class="heart-btn <%= homes.isFav ? 'active' : '' %>" aria-label="Favorite">
+            ♥
+          </button>
+        </form>
+
+        <div class="img-wrapper">
+          <img src="<%= homes.image %>" alt="<%= homes.house_name %>" class="home-img">
+        </div>
+       
+        <div class="home-info">
+          <div class="home-title-row">
+            <h3 class="home-title"><%= homes.house_name %></h3>
+            <% if (homes.rating) { %>
+              <span class="home-rating">★ <%= homes.rating %></span>
+            <% } else { %>
+              <span class="home-rating new-badge">NEW</span>
+            <% } %>
+          </div>
+          <p class="home-location">📍 <%= homes.location %></p>
+          <p class="home-rooms">🛏️ <%= homes.rooms %> rooms</p>
+          <div class="home-footer">
+            <span class="home-price"><strong>$<%= homes.price %></strong>/night</span>
+            <a href="/details/<%= homes.id %>" class="details-btn">
+              Details
+            </a>
+          </div>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+</div>
+
+<style>
+  /* Container layout */
+  .store-container {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 30px 20px;
+  }
+  .store-header {
+    text-align: left;
+    margin-bottom: 25px;
+  }
+  .store-header h2 {
+    font-size: 1.8rem;
+    color: #222;
+    margin: 0 0 6px 0;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+  .store-header p {
+    color: #717171;
+    font-size: 1rem;
+    margin: 0;
+  }
+
+  /* Grid Layout: Exactly 5 items in a row on desktop/large screens */
+  .homes {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 20px;
+  }
+  @media (min-width: 576px) {
+    .homes {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 900px) {
+    .homes {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 1200px) {
+    .homes {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+  }
+
+  /* Card Redesign */
+  .home-card {
+    position: relative;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+    transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease;
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    height: 100%;
+    border: 1px solid #e7e7e7;
+  }
+  .home-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Favorite heart button styling */
+  .fav-form {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+  }
+  .heart-btn {
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: #b0b0b0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease, color 0.2s ease;
+  }
+  .heart-btn:hover {
+    transform: scale(1.15);
+  }
+  .heart-btn.active {
+    color: #ff5a5f;
+  }
+
+  /* Fixed image wrapper with aspect ratio */
+  .img-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4/3; /* Fixed aspect ratio to keep all image sizes identical */
+    overflow: hidden;
+    background: #eaeaea;
+  }
+  .home-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .home-card:hover .home-img {
+    transform: scale(1.06);
+  }
+
+  /* Info section */
+  .home-info {
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+  .home-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 6px;
+    margin-bottom: 4px;
+  }
+  .home-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #222;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .home-rating {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #222;
+    background: #f7f7f7;
+    padding: 1px 4px;
+    border-radius: 4px;
+    border: 1px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .new-badge {
+    background: #e6f8f2;
+    color: #00875a;
+    border-color: #a3e0c9;
+  }
+  .home-location {
+    font-size: 0.85rem;
+    color: #717171;
+    margin: 0 0 4px 0;
+  }
+  .home-rooms {
+    font-size: 0.8rem;
+    color: #717171;
+    margin: 0 0 10px 0;
+  }
+
+  /* Footer and details btn */
+  .home-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    padding-top: 8px;
+    border-top: 1px solid #f0f0f0;
+  }
+  .home-price {
+    font-size: 0.85rem;
+    color: #222;
+  }
+  .home-price strong {
+    font-size: 1rem;
+    font-weight: 800;
+  }
+  .details-btn {
+    padding: 5px 10px;
+    background: #ff5a5f;
+    color: #fff;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.75rem;
+    font-weight: bold;
+    transition: background 0.15s ease, transform 0.15s ease;
+  }
+  .details-btn:hover {
+    background: #e0484d;
+    transform: translateY(-1px);
+  }
+</style>
+
+</body>
+</html>

@@ -1,0 +1,242 @@
+<%- include('../partials/nav') %>
+
+<div class="details-container">
+  <div class="details-card">
+    <div class="details-grid">
+      <!-- Left side: Image -->
+      <div class="details-image-section">
+        <img src="<%= home.image %>" alt="<%= home.house_name %>" class="details-img">
+      </div>
+
+      <!-- Right side: Content -->
+      <div class="details-info-section">
+        <div class="details-header">
+          <span class="details-badge">Verified Property</span>
+          <% if (home.rating) { %>
+            <span class="details-rating">★ <%= home.rating %></span>
+          <% } else { %>
+            <span class="details-rating new-badge">No reviews yet</span>
+          <% } %>
+        </div>
+
+        <h1 class="details-title"><%= home.house_name %></h1>
+        <p class="details-location">📍 <%= home.location %></p>
+        
+        <div class="details-specs">
+          <div class="spec-item">
+            <span class="spec-icon">🛏️</span>
+            <div>
+              <strong><%= home.rooms %> Rooms</strong>
+              <small>Spacious layout</small>
+            </div>
+          </div>
+          <div class="spec-item">
+            <span class="spec-icon">💵</span>
+            <div>
+              <strong>$<%= home.price %> / night</strong>
+              <small>Best rate guarantee</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="details-actions">
+          <button class="book-now-btn">Book This Home</button>
+          <a href="/" class="back-btn">Back to Homes</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .details-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px;
+  }
+
+  .details-card {
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+    border: 1px solid #eaeaea;
+  }
+
+  .details-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 768px) {
+    .details-grid {
+      grid-template-columns: 1.1fr 1fr;
+    }
+  }
+
+  /* Image styling */
+  .details-image-section {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4/3;
+    background: #eaeaea;
+  }
+
+  @media (min-width: 768px) {
+    .details-image-section {
+      height: 100%;
+      aspect-ratio: auto;
+      min-height: 380px;
+    }
+  }
+
+  .details-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Info Section */
+  .details-info-section {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .details-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .details-badge {
+    background: #fff;
+    color: #ff5a5f;
+    font-weight: 700;
+    font-size: 0.75rem;
+    padding: 3px 8px;
+    border-radius: 20px;
+    border: 1.5px solid #ff5a5f;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .details-rating {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #222;
+    background: #f7f7f7;
+    padding: 3px 8px;
+    border-radius: 6px;
+    border: 1px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+  }
+
+  .new-badge {
+    background: #e6f8f2;
+    color: #00875a;
+    border-color: #a3e0c9;
+  }
+
+  .details-title {
+    font-size: 1.5rem;
+    color: #222;
+    margin: 0 0 6px 0;
+    font-weight: 800;
+  }
+
+  .details-location {
+    font-size: 0.95rem;
+    color: #717171;
+    margin: 0 0 20px 0;
+  }
+
+  /* Specs list */
+  .details-specs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding: 16px 0;
+    border-top: 1px solid #f0f0f0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .spec-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .spec-icon {
+    font-size: 1.6rem;
+  }
+
+  .spec-item div {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .spec-item strong {
+    font-size: 0.9rem;
+    color: #222;
+  }
+
+  .spec-item small {
+    font-size: 0.75rem;
+    color: #717171;
+  }
+
+  /* Action Buttons */
+  .details-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .book-now-btn {
+    padding: 10px;
+    background: #ff5a5f;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.1s ease;
+    box-shadow: 0 3px 10px rgba(255, 90, 95, 0.25);
+  }
+
+  .book-now-btn:hover {
+    background: #e0484d;
+    transform: translateY(-1px);
+  }
+
+  .book-now-btn:active {
+    transform: translateY(1px);
+  }
+
+  .back-btn {
+    text-align: center;
+    padding: 9px;
+    background: #fff;
+    color: #484848;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: bold;
+    border: 1px solid #d0d0d0;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+
+  .back-btn:hover {
+    background: #f7f7f7;
+    color: #222;
+  }
+</style>
+
+</body>
+</html>
