@@ -1,11 +1,11 @@
 const redis=require('redis')
-
+// think of it as a pointer client pointing to redis url
 const client =  redis.createClient(
  { url:'redis://localhost:6380'}
 )
-client.on((err),(err)=>{
-  console.log(err);
-})
+client.on('error',(err)=>{
+  console.error(err);
+});
 (async()=>{
 await client.connect();
 console.log("Connected");

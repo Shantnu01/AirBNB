@@ -31,8 +31,8 @@ static async isFav(home_id,user_id=1)
 }
 
 static async getFavs(user_id=1)
-{
-const data=await pool.query(`SELECT homes.*
+{ //could have name every column from fav and homes table needed  here but its better too use home.* select every homes column
+const data=await pool.query(`SELECT homes.*   
     FROM favourites
     JOIN homes
     ON favourites.home_id=homes.id

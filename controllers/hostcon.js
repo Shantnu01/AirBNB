@@ -14,13 +14,13 @@ exports.postAddhome=async(req,res,next)=>
   
  res.render("host/cong",{title:"Congrats"});
 }
-
+// incomplete
 exports.getHomeList=async(req,res,next)=>{
   const data= await homes.fetchAll();
   res.render("host/host-home-list",{house:data,title:"Home"});
  
 }
-
+////////////////////////////// 
 exports.deleteHome=async(req,res,next)=>{
   const id = req.body.id ;
   await homes.deleteHome(id);

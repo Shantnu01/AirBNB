@@ -1,13 +1,4 @@
-Viewed edithome.ejs
-Viewed add-home.ejs:1-74
 
-To set up [edithome.ejs](file:///e:/AirBNB/views/host/edithome.ejs), you can use the code below. 
-
-It replicates the styling and layout of `add-home.ejs`, prepopulates all the inputs with the home data passed from your controller (using `<%= home.xxxx %>`), holds the home's ID in a hidden input field, and includes the **Apply** and **Cancel** buttons.
-
-### Content to write in [edithome.ejs](file:///e:/AirBNB/views/host/edithome.ejs)
-
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -65,13 +56,13 @@ It replicates the styling and layout of `add-home.ejs`, prepopulates all the inp
   </style>
 </head>
 <body>
-  <!-- Navbar partial -->
+  
   <%- include('../partials/nav') %>
 
   <div class="container">
     <h2>Edit Home</h2>
     <form action="/host/edits" method="POST">
-      <!-- Hidden field to pass the home ID back to the server -->
+      
       <input type="hidden" name="id" value="<%= home.id %>">
 
       <label for="title">Home Title</label>

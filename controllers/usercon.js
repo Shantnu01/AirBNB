@@ -3,7 +3,7 @@ const {homes}=require("../model/home")
 const {fav}=require("../model/favourites");
 const  client=require("../config/redis");
 
-
+// when data comes from pg its in form or obj to first stringify it 
 
 exports.getHome= async(req,res,next)=>
 {

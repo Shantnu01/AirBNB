@@ -2,11 +2,12 @@
 const express=require('express');
 const app=express();
 const session = require('express-session');
-
+require("dotenv").config({path:"./config/.env"})
 //made requires
 const {host}=require("./routes/hostRouter");
 const {user}=require("./routes/userRouter");
-
+// if user is  using  things  like cloudflare or any  public network to get real  wifi
+app.set('trust proxy', true);
 //body -parser
 app.use(express.urlencoded({extended:true}))
 
