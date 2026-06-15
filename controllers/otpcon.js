@@ -1,5 +1,5 @@
 const client=require('../config/redis');
-const transporter=require("../config/mail");
+const { transporter } = require("../config/mail");
 const { pool } = require('../db');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
