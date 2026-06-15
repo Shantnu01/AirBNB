@@ -65,39 +65,5 @@ exports.remFav=async(req,res,next)=>{
   await fav.removeFav(id);
   
     res.redirect('/fav');
-  
-  
+    
 }
-
-exports.getlogin=(req,res,next)=>
-{
-  res.render('store/login',{title:'login'})
-
-}
-
-exports.postlogin=(req,res,next)=>{
-  const {username, password}=req.body ;
-  if(username==='admin' && password ==='1234')
-  {
-    req.session.isLoggedIn=true;
-    req.session.username=username;
-    res.redirect('/');
-
-  }
-  else
-  {
-    res.redirect('/login');
-  }
-}
-
-exports.getsignup=(req, res,next) => {
-  res.render('store/signup', { title: 'Sign Up' });
-}
-
-exports.postSignup=(req, res,next) => {
-  const { username, password } = req.body;
-  req.session.isLoggedIn = true;
-  req.session.username = username;
-  
-  res.redirect('/');
-};

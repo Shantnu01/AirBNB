@@ -1,5 +1,8 @@
 const client=require('../config/redis');
 const transporter=require("../config/mail");
+const { pool } = require('../db');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 
 exports.sendOTP=async (req,res,next)=>
@@ -8,6 +11,10 @@ exports.sendOTP=async (req,res,next)=>
   if(!email)
   {
     return res.status(400).send("Email Required");
+  }
+  const userCheck = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+  if (userCheck.rows.length > 0) {
+    return res.status(400).send("User already exists");
   }
   // Rate Limiting  : Fixed window
   // Rate Limitng the IP
@@ -42,6 +49,7 @@ exports.sendOTP=async (req,res,next)=>
     text:`Your OTP is ${otp}`
   })
   req.session.email = email;
+  req.session.password = req.body.password;
   res.render('store/otp-enter',{title:'OTP'});
 }
 catch(err){
@@ -59,10 +67,20 @@ exports.verifyOTP=async(req,res,next)=>{
   if(storedOtp!==null){
   if(storedOtp===userOtp)
   {
-    req.session.isLoggedIn=true;
-    console.log("Success");
-    await client.del(`otp:${email}`)
-     return res.redirect("/login");
+    try {
+      const password = req.session.password;
+      const hash = await bcrypt.hash(password, 10);
+      const result = await pool.query('INSERT INTO users (email, password) VALUES ($1, $2) RETURNING id', [email, hash]);
+      const userId = result.rows[0].id;
+      const token = jwt.sign({ userId, email }, process.env.JWT_SECRET || 'supersecret', { expiresIn: '1h' });
+      res.cookie('token', token, { httpOnly: true, maxAge: 3600000 });
+      delete req.session.password;
+      await client.del(`otp:${email}`);
+      return res.redirect("/");
+    } catch (err) {
+      console.error(err);
+      return res.status(500).send("Something went wrong during signup!");
+    }
   }
 
   else{

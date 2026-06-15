@@ -65,10 +65,15 @@
     <h1>Airbnb</h1>
     <ul>
       <li><a href="/">🏠 Home</a></li>
-      <li><a href="/host/add-home">➕ Add Home</a></li>
-      <li><a href="/fav">❤️ Favourites</a></li>
-      <li><a href="/store/bookings">📅 Bookings</a></li>
-      <li><a href="/host/homeslist">🏠 Host Homes</a></li>
-
+      <% if (locals.isLoggedIn) { %>
+        <li><a href="/host/add-home">➕ Add Home</a></li>
+        <li><a href="/fav">❤️ Favourites</a></li>
+        <li><a href="/store/bookings">📅 Bookings</a></li>
+        <li><a href="/host/homeslist">🏠 Host Homes</a></li>
+        <li><a href="/auth/logout">🚪 Logout</a></li>
+      <% } else { %>
+        <li><a href="/auth/login">🔑 Log In</a></li>
+        <li><a href="/auth/sign-up">📝 Sign Up</a></li>
+      <% } %>
     </ul>
   </nav>

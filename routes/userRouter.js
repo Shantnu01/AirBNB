@@ -13,9 +13,7 @@ user.use((req,res,next)=>{
   console.log("Inside User!!!");
   next();
 })
-user.get('/login', usercon.getlogin);
 
-user.get('/signup', usercon.getsignup);
 
 
 user.get('/',usercon.getHome);

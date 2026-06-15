@@ -49,6 +49,8 @@
       border-radius: 8px;
       box-sizing: border-box;
       font-size: 0.95rem;
+      text-align: center;
+      letter-spacing: 4px;
     }
     input:focus {
       border-color: #ff5a5f;
@@ -65,9 +67,30 @@
       font-weight: bold;
       cursor: pointer;
       transition: background 0.15s ease;
+      margin-bottom: 12px;
     }
     .btn-submit:hover {
       background: #e0484d;
+    }
+    .btn-back {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      background: #fff;
+      color: #555;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      box-sizing: border-box;
+      transition: background 0.15s ease, border-color 0.15s ease;
+    }
+    .btn-back:hover {
+      background: #f0f0f0;
+      border-color: #999;
     }
     .switch-link {
       display: block;
@@ -88,21 +111,19 @@
 </head>
 <body>
   <div class="auth-container">
-    <h2>Create Account</h2>
-    <p>Join Airbnb to discover and host amazing properties.</p>
+    <h2>OTP Verification</h2>
+    <p>Please enter the 6-digit OTP sent to your email.</p>
     
-    <form action="/auth/otp" method="POST">
-      <label for="email">Email</label>
-      <input type="email" id="email" name="email" placeholder="Enter your email" required>
+    <form action="/auth/verify-otp" method="POST">
+      <label for="otp">Enter OTP</label>
+      <input type="text" id="otp" name="otp" placeholder="••••••" maxlength="6" pattern="[0-9]{6}" required autocomplete="one-time-code">
 
-      <label for="password">Password</label>
-      <input type="password" id="password" name="password" placeholder="Create a password" required>
-
-      <button type="submit" class="btn-submit">Get OTP</button>
+      <button type="submit" class="btn-submit">Verify & Submit</button>
+      <a href="/auth/sign_up" class="btn-back">← Back to Sign Up</a>
     </form>
 
     <div class="switch-link">
-      Already have an account? <a href="/auth/login">Log in</a>
+      Didn't receive code? <a href="/auth/sign_up">Resend OTP</a>
     </div>
   </div>
 </body>
