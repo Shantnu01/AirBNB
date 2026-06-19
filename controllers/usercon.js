@@ -28,7 +28,7 @@ exports.getHome= async(req,res,next)=>
 
 exports.getFav=async(req,res,next)=>
 {
-  const f=await fav.getFavs()
+  const f=await fav.getFavs(req.user.userId)
     res.render('store/favourite-list',{favorites:f,title:"Favourites"})
   
 
@@ -56,13 +56,13 @@ exports.getDetails=async(req,res,next)=>
 exports.postFav=async(req,res,next)=>
 {
   const id =req.body.id;
- await  fav.postFavs(id);
+ await  fav.postFavs(id,req.user.userId);
   res.redirect('/fav');
 }
 
 exports.remFav=async(req,res,next)=>{
   const id=req.body.id;
-  await fav.removeFav(id);
+  await fav.removeFav(id,req.user.userId);
   
     res.redirect('/fav');
     

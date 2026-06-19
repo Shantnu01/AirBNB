@@ -8,7 +8,12 @@ exports.getAddhome=(req,res,next)=>{
 exports.postAddhome=async(req,res,next)=>
 {
   const {title,location,price,image,rooms}=req.body;
-  const home=new homes(image,title,location,price,rooms);
+  const parsedPrice = parseFloat(price);
+  const parsedRooms = parseInt(rooms);
+  if (isNaN(parsedPrice) || parsedPrice <= 0 || isNaN(parsedRooms) || parsedRooms <= 0) {
+    return res.status(400).send("Price and rooms must be positive numbers");
+  }
+  const home=new homes(image,title,location,parsedPrice,parsedRooms);
   await home.save();
   await client.del('homes');
   
@@ -43,10 +48,15 @@ exports.getEdit=async(req,res,next)=>
 exports.postApply=async(req,res,next)=>
 {
   const {id,title,location,price,image,rooms}=req.body ;
-  const home = new homes(image,title,location,price,rooms) ;
+  const parsedPrice = parseFloat(price);
+  const parsedRooms = parseInt(rooms);
+  if (isNaN(parsedPrice) || parsedPrice <= 0 || isNaN(parsedRooms) || parsedRooms <= 0) {
+    return res.status(400).send("Price and rooms must be positive numbers");
+  }
+  const home = new homes(image,title,location,parsedPrice,parsedRooms) ;
   home.id = id ;
   await home.save() ;
-  await client.del(`home:${id}`,'homes');
+  await client.del([`home:${id}`, 'homes']);
   
   res.redirect('/host/homeslist') ;
 }

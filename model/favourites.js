@@ -3,7 +3,7 @@ const {pool}=require('../db');
 
 exports.fav=class Favourites
 {
-static async isFav(home_id,user_id=1)
+static async isFav(home_id,user_id)
  {
   const data=await pool.query(`SELECT *
     FROM favourites
@@ -17,8 +17,8 @@ static async isFav(home_id,user_id=1)
 
  
 
- static async postFavs(home_id,user_id=1)
-{ 
+ static async postFavs(home_id,user_id)
+ { 
   const fav=await this.isFav(home_id,user_id);
   if(fav)
   {
@@ -30,8 +30,8 @@ static async isFav(home_id,user_id=1)
   }
 }
 
-static async getFavs(user_id=1)
-{ //could have name every column from fav and homes table needed  here but its better too use home.* select every homes column
+static async getFavs(user_id)
+{ 
 const data=await pool.query(`SELECT homes.*   
     FROM favourites
     JOIN homes
@@ -41,9 +41,9 @@ const data=await pool.query(`SELECT homes.*
 
 }
 
-static async removeFav(home_id,user_id=1)
+static async removeFav(home_id,user_id)
 {
- await pool.query(`DELETE FROM favourites
+  await pool.query(`DELETE FROM favourites
   WHERE home_id=$1 AND user_id=$2 ;`,[home_id,user_id]);
 
 }
