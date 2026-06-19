@@ -1,6 +1,7 @@
 const { pool } = require('../db');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const otpcon = require('./otpcon');
 
 exports.getlogin=(req,res,next)=>
 {
@@ -44,7 +45,7 @@ exports.postSignup=(req, res,next) => {
   const { email, password } = req.body;
   req.session.email = email;
   req.session.password = password;
-  res.redirect('/auth/otp');
+  return otpcon.sendOTP(req, res, next);
 };
 
 exports.postLogOut=(req,res,next)=>{

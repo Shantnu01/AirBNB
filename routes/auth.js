@@ -6,7 +6,6 @@ auth.get('/login',authn.getlogin);
 auth.post('/login',authn.postlogin);
 auth.get('/sign-up',authn.getsignup);
 auth.post('/sign-up',authn.postSignup);
-auth.get('/otp', otpcon.sendOTP);
 auth.post('/verify-otp', otpcon.verifyOTP);
 auth.get('/logout', authn.postLogOut);
 
