@@ -26,7 +26,7 @@ app.set("view engine","ejs")
 
 // SESSION
 app.use(session({
-  secret:"HelloWorld",
+  secret:"asdadiwidw23mk324nio234",
   resave:false, 
   saveUninitialized:false,
   cookie :{maxAge:600000}

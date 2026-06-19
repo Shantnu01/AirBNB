@@ -62,7 +62,8 @@ exports.homes=class homes
 
   static async deleteHome(id)
   {
-    await pool.query(`DELETE FROM homes WHERE id=$1`,[id]) ;
+    await pool.query(`DELETE FROM favourites WHERE home_id=$1`, [id]);
+    await pool.query(`DELETE FROM homes WHERE id=$1`, [id]);
   }
 
   static async fetchById(i)

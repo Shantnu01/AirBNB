@@ -23,7 +23,7 @@ exports.postlogin=async(req,res,next)=>{
     }
     const token = jwt.sign(
       { userId: user.id, email: user.email },
-      process.env.JWT_SECRET || 'supersecret',
+      process.env.JWT_SECRET || 'asdadfwfefrasdd22224$%$3#cwvs@B!#@sfs',
       { expiresIn: '1h' }
     );
     res.cookie('token', token, {
