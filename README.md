@@ -9,13 +9,18 @@ A lightweight Node.js & Express web application designed to simulate the core fe
 This application allows users to act as **Hosts** (who can list, edit, and delete properties) and **Guests/Users** (who can browse homes, view details, and manage a list of favorite properties).
 
 ### 📍 Current Situation & Development Status:
-* **Database Relational Persistence:** The project has successfully transitioned from local JSON file storage (`data/data.json` and `data/fav.json`, now legacy/deprecated) to a PostgreSQL relational database using the `pg` client pool driver.
+* **Database Relational Persistence:** The project has successfully transitioned from local JSON file storage (`data/data.json` and `data/fav.json`, now legacy/deprecated) to a PostgreSQL relational database using the `pg` client pool driver. Home deletion automatically cleans up related favorites at the JS/query level to avoid key constraints.
 * **Authentication & Session Management (JWT & OTP Flow):**
   * Uses JWT (JSON Web Tokens) stored in secure, HTTP-only cookies to manage user authentication state (stateless auth).
   * Registering a new account is verified via email using **Nodemailer** for sending a 6-digit OTP (cached in **Redis**).
   * The registration credentials are temporarily stored in `express-session` during the OTP flow, which is immediately destroyed (`req.session.destroy()`) upon successful verification.
   * Upon signup/login validation, user records are stored in the `users` database table, and a signed JWT is returned in a cookie.
   * Public access is restricted: only the homepage (`/`) and authentication routes (`/auth/*`) are public. Every other route requires a valid JWT.
+* **Redis Caching & Resilience:**
+  * Active caching for home lists and detail pages in Redis to decrease database load.
+  * Robust `try/catch` fallback blocks. If the Redis server goes down or encounters connection errors, the application degrades gracefully and queries PostgreSQL directly without crashing.
+* **OTP Rate Limiting:**
+  * Uses Redis counters to limit OTP requests per IP (max 20 per 5 minutes) and per email address (max 3 per 5 minutes) to protect endpoints.
 * **Bookings Feature:**
   * A "Bookings" page link exists in the navigation header ([nav.ejs](file:///e:/AirBNB/views/partials/nav.ejs)) pointing to `/store/bookings`.
   * **Note/Limitation:** The target EJS template [bookings.ejs](file:///e:/AirBNB/views/store/bookings.ejs) is currently blank/empty, and no backend router or controller logic has been implemented for bookings.
@@ -29,16 +34,21 @@ This application allows users to act as **Hosts** (who can list, edit, and delet
 * **Runtime Environment:** [Node.js](https://nodejs.org/) (v16+)
 * **Framework:** [Express.js](https://expressjs.com/) (v5+)
 * **Database:** [PostgreSQL](https://www.postgresql.org/) (v8+)
+* **In-Memory Store / Cache:** [Redis](https://redis.io/) (used for caching, transient OTP storage, and rate limiting)
 * **Template Engine:** [EJS](https://ejs.co/) (Embedded JavaScript)
 
 ### Dependencies
 Check your [package.json](file:///e:/AirBNB/package.json) for installed dependencies:
 * `"express"`: Web server routing and middleware.
 * `"pg"`: PostgreSQL client and connection pool.
+* `"redis"`: Redis database client for Node.js.
 * `"dotenv"`: Loads environment variables.
 * `"ejs"`: Rendering dynamic HTML views.
 * `"express-session"`: Temporarily stores session credentials during the OTP signup flow.
 * `"cookie-parser"`: Parser for HTTP cookies containing JWT.
+* `"jsonwebtoken"`: Creates and verifies JSON Web Tokens for auth.
+* `"bcrypt"`: Hashes and verifies user passwords securely.
+* `"nodemailer"`: Sends verification OTP emails to users.
 * `"nodemon"`: Auto-restart server on file changes.
 
 ---
