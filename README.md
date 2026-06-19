@@ -10,14 +10,15 @@ This application allows users to act as **Hosts** (who can list, edit, and delet
 
 ### 📍 Current Situation & Development Status:
 * **Database Relational Persistence:** The project has successfully transitioned from local JSON file storage (`data/data.json` and `data/fav.json`, now legacy/deprecated) to a PostgreSQL relational database using the `pg` client pool driver.
-* **Authentication & Session Management:**
-  * Uses `express-session` configured in [app.js](file:///e:/AirBNB/app.js) to manage session cookies.
-  * Login and Sign Up views ([login.ejs](file:///e:/AirBNB/views/store/login.ejs), [signup.ejs](file:///e:/AirBNB/views/store/signup.ejs)) and controllers ([usercon.js](file:///e:/AirBNB/controllers/usercon.js)) are implemented.
-  * **Note/Limitation:** The GET routes for `/login` and `/signup` are registered in [userRouter.js](file:///e:/AirBNB/routes/userRouter.js), but the POST routes (`/login` and `/signup`) are not yet registered in the router, meaning form submissions for authentication will result in a 404 until mapped.
+* **Authentication & Session Management (JWT & OTP Flow):**
+  * Uses JWT (JSON Web Tokens) stored in secure, HTTP-only cookies to manage user authentication state.
+  * Registering a new account is verified via email using **Nodemailer** for sending a 6-digit OTP (cached in **Redis**).
+  * Upon signup/login validation, user records are stored in the `users` database table, and a signed JWT is returned in a cookie.
+  * Public access is restricted: only the homepage (`/`) and authentication routes (`/auth/*`) are public. Every other route requires a valid JWT.
 * **Bookings Feature:**
   * A "Bookings" page link exists in the navigation header ([nav.ejs](file:///e:/AirBNB/views/partials/nav.ejs)) pointing to `/store/bookings`.
   * **Note/Limitation:** The target EJS template [bookings.ejs](file:///e:/AirBNB/views/store/bookings.ejs) is currently blank/empty, and no backend router or controller logic has been implemented for bookings.
-* **Cookie Parsing:** `cookie-parser` is included in the project's dependencies and a scratch testing file ([test.js](file:///e:/AirBNB/test.js)) is present in the root folder, but it is not currently active in [app.js](file:///e:/AirBNB/app.js).
+* **Cookie Parsing:** `cookie-parser` is registered and active in [app.js](file:///e:/AirBNB/app.js) to retrieve JWT tokens securely.
 
 ---
 
@@ -81,6 +82,13 @@ Follow these steps to run the project locally:
 Create a PostgreSQL database and execute the following SQL script to set up the relational tables:
 
 ```sql
+-- Create Users table
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL
+);
+
 -- Create Homes table
 CREATE TABLE homes (
     id SERIAL PRIMARY KEY,
@@ -96,7 +104,7 @@ CREATE TABLE homes (
 CREATE TABLE favourites (
     id SERIAL PRIMARY KEY,
     home_id INT REFERENCES homes(id) ON DELETE CASCADE,
-    user_id INT DEFAULT 1,
+    user_id INT REFERENCES users(id) ON DELETE CASCADE,
     UNIQUE (home_id, user_id)
 );
 ```
