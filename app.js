@@ -24,7 +24,6 @@ app.use(express.urlencoded({extended:true}))
 app.set("views" ,"views")
 app.set("view engine","ejs")
 
-// SESSION
 app.use(session({
   secret:"asdadiwidw23mk324nio234",
   resave:false, 

@@ -72,7 +72,7 @@ exports.verifyOTP=async(req,res,next)=>{
       const userId = result.rows[0].id;
       const token = jwt.sign({ userId, email }, process.env.JWT_SECRET || 'xgcghtfuyuf65t76r@@!@$GRgsthr', { expiresIn: '1h' });
       res.cookie('token', token, { httpOnly: true, maxAge: 3600000 });
-      delete req.session.password;
+      req.session.destroy();
       await client.del(`otp:${email}`);
       return res.redirect("/");
     } catch (err) {

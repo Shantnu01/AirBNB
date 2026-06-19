@@ -11,8 +11,9 @@ This application allows users to act as **Hosts** (who can list, edit, and delet
 ### 📍 Current Situation & Development Status:
 * **Database Relational Persistence:** The project has successfully transitioned from local JSON file storage (`data/data.json` and `data/fav.json`, now legacy/deprecated) to a PostgreSQL relational database using the `pg` client pool driver.
 * **Authentication & Session Management (JWT & OTP Flow):**
-  * Uses JWT (JSON Web Tokens) stored in secure, HTTP-only cookies to manage user authentication state.
+  * Uses JWT (JSON Web Tokens) stored in secure, HTTP-only cookies to manage user authentication state (stateless auth).
   * Registering a new account is verified via email using **Nodemailer** for sending a 6-digit OTP (cached in **Redis**).
+  * The registration credentials are temporarily stored in `express-session` during the OTP flow, which is immediately destroyed (`req.session.destroy()`) upon successful verification.
   * Upon signup/login validation, user records are stored in the `users` database table, and a signed JWT is returned in a cookie.
   * Public access is restricted: only the homepage (`/`) and authentication routes (`/auth/*`) are public. Every other route requires a valid JWT.
 * **Bookings Feature:**
@@ -36,8 +37,8 @@ Check your [package.json](file:///e:/AirBNB/package.json) for installed dependen
 * `"pg"`: PostgreSQL client and connection pool.
 * `"dotenv"`: Loads environment variables.
 * `"ejs"`: Rendering dynamic HTML views.
-* `"express-session"`: Manages session authentication.
-* `"cookie-parser"`: Parser for HTTP cookies.
+* `"express-session"`: Temporarily stores session credentials during the OTP signup flow.
+* `"cookie-parser"`: Parser for HTTP cookies containing JWT.
 * `"nodemon"`: Auto-restart server on file changes.
 
 ---
