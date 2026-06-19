@@ -41,10 +41,10 @@ exports.getsignup=(req, res,next) => {
 }
 
 exports.postSignup=(req, res,next) => {
-  const { username, password } = req.body;
-  
-  
-  res.redirect('/login');
+  const { email, password } = req.body;
+  req.session.email = email;
+  req.session.password = password;
+  res.redirect('/auth/otp');
 };
 
 exports.postLogOut=(req,res,next)=>{

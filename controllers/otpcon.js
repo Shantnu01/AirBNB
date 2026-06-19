@@ -6,11 +6,11 @@ const jwt = require('jsonwebtoken');
 
 
 exports.sendOTP=async (req,res,next)=>
-{ const email=req.body.email;
+{ const email=req.session.email;
   try{
   if(!email)
   {
-    return res.status(400).send("Email Required");
+    return res.redirect("/auth/sign-up");
   }
   const userCheck = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
   if (userCheck.rows.length > 0) {
@@ -48,8 +48,6 @@ exports.sendOTP=async (req,res,next)=>
     subject:'OTP Verification',
     text:`Your OTP is ${otp}`
   })
-  req.session.email = email;
-  req.session.password = req.body.password;
   res.render('store/otp-enter',{title:'OTP'});
 }
 catch(err){
@@ -72,7 +70,7 @@ exports.verifyOTP=async(req,res,next)=>{
       const hash = await bcrypt.hash(password, 10);
       const result = await pool.query('INSERT INTO users (email, password) VALUES ($1, $2) RETURNING id', [email, hash]);
       const userId = result.rows[0].id;
-      const token = jwt.sign({ userId, email }, process.env.JWT_SECRET || 'supersecret', { expiresIn: '1h' });
+      const token = jwt.sign({ userId, email }, process.env.JWT_SECRET || 'xgcghtfuyuf65t76r@@!@$GRgsthr', { expiresIn: '1h' });
       res.cookie('token', token, { httpOnly: true, maxAge: 3600000 });
       delete req.session.password;
       await client.del(`otp:${email}`);
