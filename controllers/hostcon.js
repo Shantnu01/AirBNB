@@ -15,7 +15,11 @@ exports.postAddhome=async(req,res,next)=>
   }
   const home=new homes(image,title,location,parsedPrice,parsedRooms);
   await home.save();
-  await client.del('homes');
+  try {
+    await client.del('homes');
+  } catch (err) {
+    console.error(err);
+  }
   
  res.render("host/cong",{title:"Congrats"});
 }
@@ -29,8 +33,12 @@ exports.getHomeList=async(req,res,next)=>{
 exports.deleteHome=async(req,res,next)=>{
   const id = req.body.id ;
   await homes.deleteHome(id);
-  await client.del('homes');
-  await client.del(`home:${id}`);
+  try {
+    await client.del('homes');
+    await client.del(`home:${id}`);
+  } catch (err) {
+    console.error(err);
+  }
   res.redirect('/host/homeslist');  
 }
 
@@ -56,7 +64,11 @@ exports.postApply=async(req,res,next)=>
   const home = new homes(image,title,location,parsedPrice,parsedRooms) ;
   home.id = id ;
   await home.save() ;
-  await client.del([`home:${id}`, 'homes']);
+  try {
+    await client.del([`home:${id}`, 'homes']);
+  } catch (err) {
+    console.error(err);
+  }
   
   res.redirect('/host/homeslist') ;
 }

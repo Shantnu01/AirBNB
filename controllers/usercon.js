@@ -9,18 +9,19 @@ exports.getHome= async(req,res,next)=>
 {
   let data;
   console.log("Current Session:",req.session);
-  const cachehomes=await client.get('homes');
-
-  if(cachehomes!==null)
-  {
-     data= JSON.parse(cachehomes);
-  }
-  else{
-   data= await homes.fetchAll();
-  await client.set(
-    'homes',JSON.stringify(data),{EX:86400}
-)
-
+  try {
+    const cachehomes=await client.get('homes');
+    if(cachehomes!==null)
+    {
+       data= JSON.parse(cachehomes);
+    }
+    else{
+      data= await homes.fetchAll();
+      await client.set('homes',JSON.stringify(data),{EX:86400});
+    }
+  } catch (err) {
+    console.error(err);
+    data = await homes.fetchAll();
   }
   res.render("store/home",{house:data,title:"Home"});
  
@@ -36,16 +37,21 @@ exports.getFav=async(req,res,next)=>
 
 exports.getDetails=async(req,res,next)=>
 {
-  const id=req.params.ID;
+  const Homeid=req.params.ID;
   let data;
-  const cachedet=await client.get(`home:${id}`);
-  if(cachedet!==null)
-  {
-    data=JSON.parse(cachedet);
-  }
-  else{
- data = await homes.fetchById(id);
- await client.set(`home:${id}`,JSON.stringify(data),{EX:3600});
+  try {
+    const cachedet=await client.get(`home:${Homeid}`);
+    if(cachedet!==null)
+    {
+      data=JSON.parse(cachedet);
+    }
+    else{
+      data = await homes.fetchById(Homeid);
+      await client.set(`home:${Homeid}`,JSON.stringify(data),{EX:3600});
+    }
+  } catch (err) {
+    console.error(err);
+    data = await homes.fetchById(Homeid);
   }
 
  
@@ -55,8 +61,8 @@ exports.getDetails=async(req,res,next)=>
 
 exports.postFav=async(req,res,next)=>
 {
-  const id =req.body.id;
- await  fav.postFavs(id,req.user.userId);
+  const Homeid =req.body.id;
+ await  fav.postFavs(Homeid,req.user.userId);
   res.redirect('/fav');
 }
 

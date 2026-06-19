@@ -9,10 +9,7 @@ user.get('/fav',usercon.getFav);
 
 user.get('/details/:ID',usercon.getDetails);
 user.post('/removeFav',usercon.remFav);
-user.use((req,res,next)=>{
-  console.log("Inside User!!!");
-  next();
-})
+
 
 
 

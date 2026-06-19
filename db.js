@@ -8,3 +8,7 @@ exports.pool = new Pool({
   password: process.env.DB_PASSWORD,
   port: process.env.DB_PORT
 });
+
+exports.pool.on('error', (err, client) => {
+  console.error('Unexpected error on idle client', err);
+});
