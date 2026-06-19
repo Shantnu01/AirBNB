@@ -10,9 +10,9 @@ exports.getlogin=(req,res,next)=>
 }
 
 exports.postlogin=async(req,res,next)=>{
-  const {username, password}=req.body ;
+  const {email, password}=req.body ;
   try {
-    const result = await pool.query('SELECT * FROM users WHERE email = $1', [username]);
+    const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
     if (result.rows.length === 0) {
       return res.redirect('/auth/login');
     }
