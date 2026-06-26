@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title %></title>
+  <style>
+    .booking-container {
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-start;
+      padding: 40px;
+      gap: 40px;
+    }
+    .house-details, .booking-form {
+      background: var(--card);
+      padding: 20px;
+      border-radius: var(--radius);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      border: 1px solid var(--border);
+      width: 45%;
+    }
+    .house-details img {
+      width: 100%;
+      border-radius: var(--radius);
+      margin-bottom: 15px;
+    }
+    .house-details h2 {
+      margin: 0 0 10px;
+    }
+    .booking-form h2 {
+      margin-bottom: 20px;
+    }
+    .booking-form label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+    .booking-form input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid var(--input);
+      border-radius: var(--radius);
+    }
+    .btn-book {
+      background: var(--primary);
+      color: var(--primary-foreground);
+      padding: 10px 20px;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .btn-book:hover {
+      background: var(--destructive);
+    }
+  </style>
+</head>
+<body>
+  <%- include('../partials/nav') %>
+
+  <div class="booking-container">
+    <!-- House Details -->
+    <div class="house-details">
+      <img src="<%= home.image %>" alt="<%= home.house_name %>" loading="lazy">
+      <h2><%= home.house_name %></h2>
+      <p><strong>Location:</strong> <%= home.location %></p>
+      <p><strong>Price:</strong> &#8377;<%= home.price %> per night</p>
+      <p><strong>Description:</strong> <%= home.description %></p>
+      <p><strong>Rating:</strong> ⭐ <%= home.rating %></p>
+    </div>
+
+    <!-- Booking Form -->
+    <div class="booking-form">
+      <h2>Book This Home</h2>
+      <form action="/bookings" method="POST">
+        <input type="hidden" name="hid" value="<%= home.id %>">
+
+        <label for="dob">Check-In Date</label>
+        <input type="date" id="dob" name="dob" required>
+
+        <label for="cd">Check-Out Date</label>
+        <input type="date" id="cd" name="cd" required disabled>
+
+        <button type="submit" class="btn-book">Confirm Booking</button>
+      </form>
+    </div>
+  </div>
+  <script>
+    const checkInInput = document.getElementById('dob');
+    const checkOutInput = document.getElementById('cd');
+
+    const toDateValue = (date) => {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    checkInInput.min = toDateValue(today);
+
+    checkInInput.addEventListener('change', () => {
+      if (!checkInInput.value) {
+        checkOutInput.value = '';
+        checkOutInput.disabled = true;
+        return;
+      }
+
+      const minCheckout = new Date(`${checkInInput.value}T00:00:00`);
+      minCheckout.setDate(minCheckout.getDate() + 1);
+      checkOutInput.min = toDateValue(minCheckout);
+      checkOutInput.disabled = false;
+
+      if (checkOutInput.value && checkOutInput.value <= checkInInput.value) {
+        checkOutInput.value = '';
+      }
+    });
+  </script>
+</body>
+</html>

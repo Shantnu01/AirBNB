@@ -57,7 +57,8 @@ catch(err){
   
 }
 
-// still gotta a work to do to add data to db when otp matches
+// NOW IT WORKS
+
 exports.verifyOTP=async(req,res,next)=>{
   const email=req.session.email;
   const userOtp=req.body.otp;
@@ -70,7 +71,7 @@ exports.verifyOTP=async(req,res,next)=>{
       const hash = await bcrypt.hash(password, 10);
       const result = await pool.query('INSERT INTO users (email, password) VALUES ($1, $2) RETURNING id', [email, hash]);
       const userId = result.rows[0].id;
-      const token = jwt.sign({ userId, email }, process.env.JWT_SECRET || 'xgcghtfuyuf65t76r@@!@$GRgsthr', { expiresIn: '1h' });
+      const token = jwt.sign({ userId, email }, process.env.JWT_SECRET , { expiresIn: '1h' });
       res.cookie('token', token, { httpOnly: true, maxAge: 3600000 });
       req.session.destroy();
       await client.del(`otp:${email}`);
@@ -83,7 +84,7 @@ exports.verifyOTP=async(req,res,next)=>{
 
   else{
     console.log("retry!");
-    return res.render('store/Verify',{title:"Verify OTP"})
+    return res.render('store/otp-enter',{title:"OTP"})
   }
   
 }

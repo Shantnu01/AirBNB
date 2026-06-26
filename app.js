@@ -2,9 +2,13 @@
 const express=require('express');
 const app=express();
 const session = require('express-session');
+const { RedisStore } = require("connect-redis");
+const redisClient = require("./config/redis");
+const multer=require("multer");
 require("dotenv").config({path:"./config/.env"})
 const cookieParser = require('cookie-parser');  
 const jwt = require('jsonwebtoken'); 
+const {hosts}=require("./model/host");
 
 
 
@@ -25,6 +29,7 @@ app.set("views" ,"views")
 app.set("view engine","ejs")
 
 app.use(session({
+  store: new RedisStore({ client: redisClient }),
   secret:"asdadiwidw23mk324nio234",
   resave:false, 
   saveUninitialized:false,
@@ -33,15 +38,19 @@ app.use(session({
 
 app.use(cookieParser()); 
 
-app.use((req, res, next) => { 
-  res.locals.isLoggedIn = false; // Default to false
+app.use(async (req, res, next) => { 
+  res.locals.isLoggedIn = false;
+  res.locals.isHost = false;
   const token = req.cookies.token; 
   if (token) { 
     try { 
-      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'supersecret'); 
+      const decoded = jwt.verify(token, process.env.JWT_SECRET); 
       req.user = decoded; 
       res.locals.isLoggedIn = true;  
       res.locals.username = decoded.email; 
+      const host=await hosts.fetchByUserId(decoded.userId);
+      res.locals.isHost = !!host;
+      req.host = host;
     } catch (err) { 
       res.clearCookie('token'); 
     }   

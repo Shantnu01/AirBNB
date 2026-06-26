@@ -16,11 +16,12 @@
     }
     h2 { text-align:center; margin-bottom:20px; }
     label { display:block; margin:10px 0 5px; font-weight:bold; }
-    input, select, textarea {
+    input, textarea {
       width:100%;
       padding:8px;
       border:1px solid var(--input);
       border-radius:var(--radius);
+      box-sizing:border-box;
     }
     button {
       margin-top:15px;
@@ -37,33 +38,33 @@
   </style>
 </head>
 <body>
-  <!-- Navbar partial -->
   <%- include('../partials/nav') %>
 
   <div class="container">
-    <h2>Add Home</h2>
-    <form action="/host/add-home" method="POST" enctype="multipart/form-data">
-      <label for="title">Home Title</label>
-      <input type="text" id="title" name="title" required>
+    <h2>Become a Host</h2>
+    <form action="/host/become-host" method="POST">
+      <label for="name">Name</label>
+      <input type="text" id="name" name="name" required>
 
-      <label for="location">Location</label>
-      <input type="text" id="location" name="location" required>
+      <label for="phone">Phone</label>
+      <input type="text" id="phone" name="phone" maxlength="15" required>
 
-      <label for="price">Price per Night</label>
-      <input type="number" id="price" name="price" required>
+      <label for="address">Address</label>
+      <textarea id="address" name="address" required></textarea>
 
-      <label for="rooms">Number of Rooms</label>
-      <input type="number" id="rooms" name="rooms" required>
+      <label for="city">City</label>
+      <input type="text" id="city" name="city" required>
 
-      <label for="description">Description</label>
-      <textarea id="description" name="description" required></textarea>
+      <label for="state">State</label>
+      <input type="text" id="state" name="state" required>
 
-      <label for="images">Images</label>
-      <input type="file" multiple="multiple" accept="image/*" id="images" name="images[]" required>
+      <label for="country">Country</label>
+      <input type="text" id="country" name="country" required>
 
+      <label for="pincode">Pincode</label>
+      <input type="text" id="pincode" name="pincode" maxlength="10" required>
 
-
-      <button type="submit">Add Home</button>
+      <button type="submit">Submit</button>
     </form>
   </div>
 </body>

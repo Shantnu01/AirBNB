@@ -11,6 +11,9 @@ user.get('/details/:ID',usercon.getDetails);
 user.post('/removeFav',usercon.remFav);
 
 
+user.get('/bookings',usercon.getBook);
+user.post('/bookwin',usercon.getBookWin)
+user.post('/bookings',usercon.postBooks)
 
 
 user.get('/',usercon.getHome);

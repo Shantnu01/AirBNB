@@ -42,46 +42,63 @@
     .btn-details:hover {
       background: var(--muted);
     }
-    .btn-remove {
+    .btn-cancel {
       background: var(--destructive);
       color: var(--destructive-foreground);
     }
-    .btn-remove:hover {
+    .btn-cancel:hover {
       background: var(--primary);
     }
   </style>
 </head>
 <body>
   <%- include('../partials/nav') %>
+  <%
+    const formatBookingDate = (value) => {
+      if (!value) return '';
+
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return '';
+
+      return date.toLocaleDateString('en-IN', {
+        weekday: 'long',
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric'
+      });
+    };
+  %>
 
   <div class="container">
-    <h1>🏠 Hosted Homes</h1>
+    <h1>📅 My Bookings</h1>
 
-    <% if (house && house.length > 0) { %>
+    <% if (bookings && bookings.length > 0) { %>
       <table>
         <thead>
           <tr>
             <th>House</th>
             <th>Location</th>
             <th>Price</th>
-            <th>Rooms</th>
-            <th>Rating</th>
+            <th>Booked On</th>
+            <th>Check-In</th>
+            <th>Check-Out</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          <% house.forEach(homes => { %>
+          <% bookings.forEach(booking => { %>
             <tr>
-              <td><%= homes.house_name %></td>
-              <td><%= homes.location %></td>
-              <td>&#8377;<%= homes.price %></td>
-              <td><%= homes.rooms %></td>
-              <td><%= homes.rating %></td>
+              <td><%= booking.house_name %></td>
+              <td><%= booking.location %></td>
+              <td>&#8377;<%= booking.price %></td>
+              <td><%= formatBookingDate(booking.booked_on) %></td>
+              <td><%= formatBookingDate(booking.date_of_booking) %></td>
+              <td><%= formatBookingDate(booking.check_out) %></td>
               <td>
-                <a href="/host/edit/<%= homes.id %>" class="btn btn-details">Edit</a>
-                <form action="/host/remove-home" method="POST" style="display:inline;">
-                  <input type="hidden" name="id" value="<%= homes.id %>">
-                  <button type="submit" class="btn btn-remove">Remove</button>
+                <a href="/details/<%= booking.house_id %>" class="btn btn-details">Details</a>
+                <form action="/store/cancel-booking" method="POST" style="display:inline;">
+                  <input type="hidden" name="id" value="<%= booking.id %>">
+                  <button type="submit" class="btn btn-cancel">Cancel</button>
                 </form>
               </td>
             </tr>
@@ -89,7 +106,7 @@
         </tbody>
       </table>
     <% } else { %>
-      <p>No homes hosted yet.</p>
+      <p>You don’t have any bookings yet.</p>
     <% } %>
   </div>
 </body>

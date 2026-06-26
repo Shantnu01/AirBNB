@@ -12,13 +12,13 @@
         <!-- Heart form -->
         <form action="/fav" method="POST" class="fav-form">
           <input type="hidden" name="id" value="<%= homes.id %>">
-          <button type="submit" class="heart-btn <%= homes.isFav ? 'active' : '' %>" aria-label="Favorite">
+          <button type="submit" class="heart-btn <%= (homes.isFav || homes.is_fav || homes.favorite_id) ? 'active' : '' %>" aria-label="Favorite">
             ♥
           </button>
         </form>
 
         <div class="img-wrapper">
-          <img src="<%= homes.image %>" alt="<%= homes.house_name %>" class="home-img">
+          <img src="<%= homes.image %>" alt="<%= homes.house_name %>" class="home-img" loading="lazy">
         </div>
        
         <div class="home-info">
@@ -33,10 +33,17 @@
           <p class="home-location">📍 <%= homes.location %></p>
           <p class="home-rooms">🛏️ <%= homes.rooms %> rooms</p>
           <div class="home-footer">
-            <span class="home-price"><strong>$<%= homes.price %></strong>/night</span>
+            <span class="home-price"><strong>&#8377;<%= homes.price %></strong>/night</span>
             <a href="/details/<%= homes.id %>" class="details-btn">
               Details
             </a>
+            <form action="/bookwin" method="POST" class="booking-form">
+              <input type="hidden" name="id" value="<%= homes.id %>">
+              <button type="submit" class="details-btn">
+                Book
+              </button>
+            </form>
+            
           </div>
         </div>
       </div>
@@ -57,13 +64,13 @@
   }
   .store-header h2 {
     font-size: 1.8rem;
-    color: #222;
+    color: var(--foreground);
     margin: 0 0 6px 0;
     font-weight: 800;
     letter-spacing: -0.5px;
   }
   .store-header p {
-    color: #717171;
+    color: var(--muted-foreground);
     font-size: 1rem;
     margin: 0;
   }
@@ -93,8 +100,8 @@
   /* Card Redesign */
   .home-card {
     position: relative;
-    background: #fff;
-    border-radius: 12px;
+    background: var(--card);
+    border-radius: var(--radius);
     overflow: hidden;
     box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
     transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease;
@@ -102,7 +109,7 @@
     flex-grow: 1;
     flex-direction: column;
     height: 100%;
-    border: 1px solid #e7e7e7;
+    border: 1px solid var(--border);
   }
   .home-card:hover {
     transform: translateY(-4px);
@@ -117,11 +124,11 @@
     z-index: 10;
   }
   .heart-btn {
-    background: rgba(255, 255, 255, 0.9);
-    border: none;
+    background: var(--card);
+    border: 1px solid var(--border);
     cursor: pointer;
-    font-size: 18px;
-    color: #b0b0b0;
+    font-size: 0;
+    color: var(--muted-foreground);
     width: 32px;
     height: 32px;
     border-radius: 50%;
@@ -134,8 +141,16 @@
   .heart-btn:hover {
     transform: scale(1.15);
   }
+  .heart-btn::before {
+    content: "\2665";
+    font-size: 18px;
+    line-height: 1;
+  }
   .heart-btn.active {
-    color: #ff5a5f;
+    background: var(--primary);
+    border-color: var(--primary);
+    color: var(--primary-foreground);
+    box-shadow: 0 3px 10px rgba(255, 56, 92, 0.28);
   }
 
   /* Fixed image wrapper with aspect ratio */
@@ -144,7 +159,7 @@
     width: 100%;
     aspect-ratio: 4/3; /* Fixed aspect ratio to keep all image sizes identical */
     overflow: hidden;
-    background: #eaeaea;
+    background: var(--input);
   }
   .home-img {
     width: 100%;
@@ -173,7 +188,7 @@
   .home-title {
     font-size: 0.95rem;
     font-weight: 700;
-    color: #222;
+    color: var(--foreground);
     margin: 0;
     white-space: nowrap;
     overflow: hidden;
@@ -182,28 +197,28 @@
   .home-rating {
     font-size: 0.8rem;
     font-weight: 600;
-    color: #222;
-    background: #f7f7f7;
+    color: var(--foreground);
+    background: var(--muted);
     padding: 1px 4px;
     border-radius: 4px;
-    border: 1px solid #e0e0e0;
+    border: 1px solid var(--border);
     display: flex;
     align-items: center;
     flex-shrink: 0;
   }
   .new-badge {
-    background: #e6f8f2;
-    color: #00875a;
-    border-color: #a3e0c9;
+    background: var(--secondary);
+    color: var(--primary);
+    border-color: var(--primary);
   }
   .home-location {
     font-size: 0.85rem;
-    color: #717171;
+    color: var(--muted-foreground);
     margin: 0 0 4px 0;
   }
   .home-rooms {
     font-size: 0.8rem;
-    color: #717171;
+    color: var(--muted-foreground);
     margin: 0 0 10px 0;
   }
 
@@ -214,28 +229,36 @@
     align-items: center;
     margin-top: auto;
     padding-top: 8px;
-    border-top: 1px solid #f0f0f0;
+    border-top: 1px solid var(--border);
   }
   .home-price {
     font-size: 0.85rem;
-    color: #222;
+    color: var(--foreground);
   }
   .home-price strong {
     font-size: 1rem;
     font-weight: 800;
   }
+  .booking-form {
+    margin: 0;
+    display: inline-flex;
+  }
   .details-btn {
     padding: 5px 10px;
-    background: #ff5a5f;
-    color: #fff;
-    border-radius: 6px;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    border-radius: var(--radius);
+    border: 0;
     text-decoration: none;
     font-size: 0.75rem;
     font-weight: bold;
+    line-height: 1.2;
+    cursor: pointer;
+    font-family: inherit;
     transition: background 0.15s ease, transform 0.15s ease;
   }
   .details-btn:hover {
-    background: #e0484d;
+    background: var(--destructive);
     transform: translateY(-1px);
   }
 </style>
